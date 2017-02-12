@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
 from flaskext.mysql import MySQL
+from flask_cors import CORS, cross_origin
 import requests
 mysql = MySQL()
 app = Flask(__name__)
+CORS(app)
 
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'pythondogs'
@@ -33,12 +35,21 @@ def getExistingForecast():
 
 @app.route("/createForecast", methods = ['POST'])
 def createForecast():
-	_date = str(request.form['date'])
-	_forecast = str(request.form['forecast'])
+	content = request.get_json()
+	_date = str(content['date'])
+	_forecast = str(content['forecast'])
 
 	conn = mysql.connect()
 	cursor = conn.cursor()
-	cursor.execute("INSERT INTO Weather (date, forecast) VALUES (%s, %s)", (_date, _forecast))
+
+	cursor.execute("SELECT forecast FROM Weather WHERE date = %s", _date)
+	data = cursor.fetchone()
+
+	if data is None:
+		cursor.execute("INSERT INTO Weather (date, forecast) VALUES (%s, %s)", (_date, _forecast))
+	elif "rain" not in str(data[0]).lower():
+		cursor.execute("UPDATE Weather SET forecast = %s WHERE date = %s", (_forecast, _date))
+
 	conn.commit()
 
 	return jsonify({'StatusCode':'200','Message': 'Created successfully'})
@@ -70,7 +81,8 @@ def getSchedule():
 
 @app.route("/createSchedule", methods = ['POST'])
 def createSchedule():
-	_date = str(request.form['date'])
+	content = request.get_json()
+	_date = str(content['date'])
 
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -85,4 +97,4 @@ def hello():
 	return "Hello World!"
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
