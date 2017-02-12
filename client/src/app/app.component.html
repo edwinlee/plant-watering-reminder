@@ -1,0 +1,7 @@
+<div (click)="runApp()" class="status status-clear" *ngIf="!needWater">
+	<i class="status-icon material-icons">done</i><div *ngIf="forecast.Message" class="status-label">It rained {{rainCount}} times in the past {{frequency}} days. I watered {{waterCount}} time{{waterCount == 1 ? '' : 's' }}.</div>
+</div>
+
+<div (click)="waterPlants()" class="status status-alert" *ngIf="needWater">
+	<i class="status-icon material-icons">opacity</i> <div *ngIf="forecast.Message" class="status-label">It's rained {{rainCount}} times in the past {{frequency}} days. I watered {{waterCount}} times.</div>
+</div>
