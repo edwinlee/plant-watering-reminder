@@ -14,7 +14,7 @@ export class ApiService {
 	constructor(private http:Http) {}
 
 	getCurrentForecast() {
-		return this.http.get('http://127.0.0.1:5000/getCurrentForecast')
+		return this.http.get('http://10.0.1.99:5000/getCurrentForecast')
 	      .map((res:Response) => res.json());
 
 	}
@@ -24,7 +24,7 @@ export class ApiService {
 	    let options = new RequestOptions({ headers: headers });
 		let body = JSON.stringify( {date : this.endDate.toISOString().substring(0, 10), forecast : result });
 
-		return this.http.post('http://127.0.0.1:5000/createForecast', body, options)
+		return this.http.post('http://10.0.1.99:5000/createForecast', body, options)
 	      .map((res:Response) => res.json());
 
 	}
@@ -32,7 +32,7 @@ export class ApiService {
 	getExistingForecast(frequency:number) {
 		this.startDate.setDate(this.endDate.getDate() - frequency);
 
-		return this.http.get('http://127.0.0.1:5000/getExistingForecast?start_date=' + this.startDate.toISOString().substring(0, 10) + '&end_date=' + this.endDate.toISOString().substring(0, 10))
+		return this.http.get('http://10.0.1.99:5000/getExistingForecast?start_date=' + this.startDate.toISOString().substring(0, 10) + '&end_date=' + this.endDate.toISOString().substring(0, 10))
 	      .map((res:Response) => res.json());
 
 	}
@@ -40,7 +40,7 @@ export class ApiService {
 	getSchedule(frequency:number) {
 		this.startDate.setDate(this.endDate.getDate() - frequency);
 
-		return this.http.get('http://127.0.0.1:5000/getSchedule?start_date=' + this.startDate.toISOString().substring(0, 10) + '&end_date=' + this.endDate.toISOString().substring(0, 10))
+		return this.http.get('http://10.0.1.99:5000/getSchedule?start_date=' + this.startDate.toISOString().substring(0, 10) + '&end_date=' + this.endDate.toISOString().substring(0, 10))
 	      .map((res:Response) => res.json());
 
 	}
@@ -50,7 +50,7 @@ export class ApiService {
 	    let options = new RequestOptions({ headers: headers });
 		let body = JSON.stringify( { date : this.endDate.toISOString().substring(0, 10) });
 
-		return this.http.post('http://127.0.0.1:5000/createSchedule', body, options)
+		return this.http.post('http://10.0.1.99:5000/createSchedule', body, options)
 	      .map((res:Response) => res.json());
 
 	}
